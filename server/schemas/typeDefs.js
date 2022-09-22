@@ -31,6 +31,17 @@ const typeDefs = gql`
 
 
     type Query {
+        me: async (parent, args, context) => {
+            if (context.user) {
+              const userData = await User.findOne({ _id: context.user._id })
+                .select('-__v -password')
+                .populate('thoughts')
+                .populate('friends');
+          
+              return userData;
+            }
+          
+            throw new AuthenticationError('Not logged in');
         users: [User]
         user(username: String!): User
         thoughts(username: String): [Thought]
@@ -38,8 +49,16 @@ const typeDefs = gql`
     }
     
     type Mutation {
-        login(email: String!, password: String!): User
-        addUser(username: String!, email: String!, password: String!): User
+        login(email: String!, password: String!): Auth
+        addUser(username: String!, email: String!, password: String!): Auth
+        addThought(thoughtText: String!): Thought
+        addReaction(thoughtId: ID!, reactionBody: String!): Thought
+        addFriend(friendId: ID!): User
+    }
+
+    type Auth {
+        token: ID!
+        user: User
     }
 `;
 

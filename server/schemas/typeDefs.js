@@ -4,6 +4,15 @@ const { gql } = require('apollo-server-express');
 // create our typeDefs
 //type Query: thoughts - Just like a GET request for /api/thoughts, we want to set up this query to retrieve an array of all thought data from the database
 const typeDefs = gql`
+    type User {
+        _id: ID
+        username: String
+        email: String
+        friendCount: Int
+        thoughts: [Thought]
+        friends: [User]
+    }
+
     type Thought {
         _id: ID
         thoughtText: String
@@ -20,20 +29,17 @@ const typeDefs = gql`
         username: String
     }
 
-    type User {
-        _id: ID
-        username: String
-        email: String
-        friendCount: Int
-        thoughts: [Thought]
-        friends: [User]
-    }
 
     type Query {
         users: [User]
         user(username: String!): User
         thoughts(username: String): [Thought]
         thought(_id: ID!): Thought
+    }
+    
+    type Mutation {
+        login(email: String!, password: String!): User
+        addUser(username: String!, email: String!, password: String!): User
     }
 `;
 

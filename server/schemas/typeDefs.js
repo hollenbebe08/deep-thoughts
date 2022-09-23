@@ -1,66 +1,51 @@
-// import the gql tagged template function
 const { gql } = require('apollo-server-express');
 
-// create our typeDefs
-//type Query: thoughts - Just like a GET request for /api/thoughts, we want to set up this query to retrieve an array of all thought data from the database
 const typeDefs = gql`
-    type User {
-        _id: ID
-        username: String
-        email: String
-        friendCount: Int
-        thoughts: [Thought]
-        friends: [User]
-    }
+  type User {
+    _id: ID
+    username: String
+    email: String
+    friendCount: Int
+    thoughts: [Thought]
+    friends: [User]
+  }
 
-    type Thought {
-        _id: ID
-        thoughtText: String
-        createdAt: String
-        username: String
-        reactionCount: Int
-        reactions: [Reaction]
-    }
+  type Thought {
+    _id: ID
+    thoughtText: String
+    createdAt: String
+    username: String
+    reactionCount: Int
+    reactions: [Reaction]
+  }
 
-    type Reaction {
-        _id: ID
-        reactionBody: String
-        createdAt: String
-        username: String
-    }
+  type Reaction {
+    _id: ID
+    reactionBody: String
+    createdAt: String
+    username: String
+  }
 
+  type Auth {
+    token: ID!
+    user: User
+  }
 
-    type Query {
-        me: async (parent, args, context) => {
-            if (context.user) {
-              const userData = await User.findOne({ _id: context.user._id })
-                .select('-__v -password')
-                .populate('thoughts')
-                .populate('friends');
-          
-              return userData;
-            }
-          
-            throw new AuthenticationError('Not logged in');
-        users: [User]
-        user(username: String!): User
-        thoughts(username: String): [Thought]
-        thought(_id: ID!): Thought
-    }
-    
-    type Mutation {
-        login(email: String!, password: String!): Auth
-        addUser(username: String!, email: String!, password: String!): Auth
-        addThought(thoughtText: String!): Thought
-        addReaction(thoughtId: ID!, reactionBody: String!): Thought
-        addFriend(friendId: ID!): User
-    }
+  type Query {
+    me: User
+    users: [User]
+    user(username: String!): User
+    thoughts(username: String): [Thought]
+    thought(_id: ID!): Thought
+  }
 
-    type Auth {
-        token: ID!
-        user: User
-    }
+  type Mutation {
+    login(email: String!, password: String!): Auth
+    addUser(username: String!, email: String!, password: String!): Auth
+    addThought(thoughtText: String!): Thought
+    addReaction(thoughtId: ID!, reactionBody: String!): Thought
+    addFriend(friendId: ID!): User
+  }
 `;
 
-// export the typeDefs
 module.exports = typeDefs;

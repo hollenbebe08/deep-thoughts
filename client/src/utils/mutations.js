@@ -26,3 +26,50 @@ export const ADD_USER = gql`
     }
   }
 `;
+
+//add friend mutation
+export const ADD_FRIEND = gql`
+  mutation addFriend($id: ID!) {
+    addFriend(friendId: $id) {
+      _id
+      username
+      friendCount
+      friends {
+        _id
+        username
+      }
+    }
+  }
+`;
+
+//add a thought
+export const ADD_THOUGHT = gql`
+  mutation addThought($thoughtText: String!) {
+    addThought(thoughtText: $thoughtText) {
+      _id
+      thoughtText
+      createdAt
+      username
+      reactionCount
+      reactions {
+        _id
+      }
+    }
+  }
+`;
+
+//add a reaction to a thought
+export const ADD_REACTION = gql`
+  mutation addReaction($thoughtId: ID!, $reactionBody: String!) {
+    addReaction(thoughtId: $thoughtId, reactionBody: $reactionBody) {
+      _id
+      reactionCount
+      reactions {
+        _id
+        reactionBody
+        createdAt
+        username
+      }
+    }
+  }
+`;

@@ -36,6 +36,7 @@ export const QUERY_THOUGHT = gql`
   }
 `;
 
+//attach friends to a user and allow friends pages to be seen
 export const QUERY_USER = gql`
   query user($username: String!) {
     user(username: $username) {
@@ -56,3 +57,48 @@ export const QUERY_USER = gql`
     }
   }
 `;
+
+
+//persist users logged in status and show info particular to them
+export const QUERY_ME = gql`
+  {
+    me {
+      _id
+      username
+      email
+      friendCount
+      thoughts {
+        _id
+        thoughtText
+        createdAt
+        reactionCount
+        reactions {
+          _id
+          createdAt
+          reactionBody
+          username
+        }
+      }
+      friends {
+        _id
+        username
+      }
+    }
+  }
+`;
+
+//users personal profile page
+export const QUERY_ME_BASIC = gql`
+  {
+    me {
+      _id
+      username
+      email
+      friendCount
+      friends {
+        _id
+        username
+      }
+    }
+  }
+`
